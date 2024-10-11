@@ -1,0 +1,18 @@
+name: "@voxel51/data_quality"
+description: Python panel for detecting and removing low-quality image samples
+version: 1.0.0
+fiftyone:
+  version: "*"
+operators:
+  - compute_brightness
+  - compute_blurriness
+  - compute_exposure
+  - compute_aspect_ratio
+  - compute_entropy
+  - compute_hash
+  - compute_all_issues
+  - delete_samples
+  - tag_samples
+  - save_view
+panels:
+  - data_quality_panel
