@@ -55,13 +55,13 @@ ISSUE_DESCRIPTIONS = {
 }
 
 
-class DataQualityPanel(foo.Panel):
-    """Data Quality Panel"""
+class OldDataQualityPanel(foo.Panel):
+    """Old Data Quality Panel"""
 
     @property
     def config(self):
         return foo.PanelConfig(
-            name="data_quality_panel", label="Data Quality Panel"
+            name="old_data_quality_panel", label="Old Old Data Quality Panel"
         )
 
     def on_change_view(self, ctx: foo.executor.ExecutionContext):
@@ -99,7 +99,7 @@ class DataQualityPanel(foo.Panel):
         """Run on startup"""
         ctx.trigger(
             "split_panel",
-            {"name": "data_quality_panel", "layout": "horizontal"},
+            {"name": "old_data_quality_panel", "layout": "horizontal"},
         )
         ctx.panel.state.histogram = None
         ctx.panel.state.layout = None
@@ -192,9 +192,9 @@ class DataQualityPanel(foo.Panel):
         ctx.panel.state.default_slider_vals = default_slider_vals
 
     def tab_change(self, ctx: foo.executor.ExecutionContext):
-        """Changes which data quality issue to view"""
+        """Changes which Old Data Quality issue to view"""
         # BUG: Why does this error pop up at the bottom even though nothing is wrong?
-        # object of type 'NoneType' has no len() (operation: @voxel51/data_quality/data_quality_panel#tab_change)
+        # object of type 'NoneType' has no len() (operation: @voxel51/data_quality/old_data_quality_panel#tab_change)
         ctx.panel.state.issue_type = ctx.params["value"] or DEFAULT_ISSUE_TYPE
         ctx.panel.state.hist_lower_thresh = None
         ctx.panel.state.hist_upper_thresh = None
@@ -238,7 +238,7 @@ class DataQualityPanel(foo.Panel):
         field: str,
     ):
         """Adds a histogram and selection sliders to the panel"""
-        method = "data_quality_panel"
+        method = "old_data_quality_panel"
         run_key = f"{field}"
 
         if run_key in ctx.dataset.list_runs(method=method):
@@ -769,7 +769,7 @@ class DataQualityPanel(foo.Panel):
         #     params={
         #         #"samples": ctx.dataset,
         #         "embeddings": "clip_embeddings",
-        #         "brain_key": "data_quality_panel_similarity",
+        #         "brain_key": "old_data_quality_panel_similarity",
         #         "model": "clip-vit-base32-torch",
         #         "batch_size": 8,
         #         "backend": "sklearn",
@@ -903,14 +903,14 @@ class DataQualityPanel(foo.Panel):
 
     def button_tag_samples(self, ctx: foo.executor.ExecutionContext):
         """Button operator for tagging samples"""
-        ctx.ops.track_event("data_quality_panel_tag_samples")
+        ctx.ops.track_event("old_data_quality_panel_tag_samples")
         ctx.prompt("@voxel51/data_quality/tag_samples")
         # BUG: Why does it say "No operator provided for panel event"?
         # TODO: Set selection of tags to the new tags
 
     def button_save_view(self, ctx: foo.executor.ExecutionContext):
         """Button operator for saving a view"""
-        ctx.ops.track_event("data_quality_panel_save_view")
+        ctx.ops.track_event("old_data_quality_panel_save_view")
         ctx.prompt("@voxel51/data_quality/save_view", on_success=self.reload)
 
     def reset_view(self, ctx: foo.executor.ExecutionContext):
@@ -918,7 +918,7 @@ class DataQualityPanel(foo.Panel):
 
     def button_delete_samples(self, ctx: foo.executor.ExecutionContext):
         """Button operator for deleting samples"""
-        ctx.ops.track_event("data_quality_panel_delete_samples")
+        ctx.ops.track_event("old_data_quality_panel_delete_samples")
         ctx.prompt(
             "@voxel51/data_quality/delete_samples", on_success=self.reset_view
         )
@@ -935,7 +935,7 @@ class DataQualityPanel(foo.Panel):
         ctx.ops.set_view(exact_dup_view)
 
     def compute_hash(self, ctx: foo.executor.ExecutionContext):
-        ctx.ops.track_event("data_quality_panel_compute_hash")
+        ctx.ops.track_event("old_data_quality_panel_compute_hash")
         ctx.prompt(
             "@voxel51/data_quality/compute_hash",
             on_success=self.load_exact_dups,
@@ -945,12 +945,12 @@ class DataQualityPanel(foo.Panel):
         ctx.ops.reload_dataset()
 
     def compute_sim(self, ctx: foo.executor.ExecutionContext):
-        ctx.ops.track_event("data_quality_panel_compute_similarity")
+        ctx.ops.track_event("old_data_quality_panel_compute_similarity")
         ctx.prompt(
             "@voxel51/brain/compute_similarity",
             params={
                 "embeddings": "clip_embeddings",
-                "brain_key": "data_quality_panel_similarity",
+                "brain_key": "old_data_quality_panel_similarity",
                 "model": "clip-vit-base32-torch",
                 "batch_size": 8,
                 "backend": "sklearn",
@@ -1001,7 +1001,7 @@ class DataQualityPanel(foo.Panel):
 
 
 def register(p):
-    p.register(DataQualityPanel)
+    p.register(OldDataQualityPanel)
     p.register(ComputeBrightness)
     p.register(ComputeBlurriness)
     p.register(ComputeEntropy)

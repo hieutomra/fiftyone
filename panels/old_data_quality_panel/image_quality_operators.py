@@ -112,7 +112,7 @@ class ComputeBrightness(foo.Operator):
     def config(self):
         return foo.OperatorConfig(
             name="compute_brightness",
-            label="Data Quality Panel Brightness",
+            label="Old Data Quality Panel Brightness",
             dynamic=True,
         )
 
@@ -139,7 +139,7 @@ class ComputeEntropy(foo.Operator):
     def config(self):
         return foo.OperatorConfig(
             name="compute_entropy",
-            label="Data Quality Panel Entropy",
+            label="Old Data Quality Panel Entropy",
             dynamic=True,
         )
 
@@ -166,7 +166,7 @@ class ComputeAspectRatio(foo.Operator):
     def config(self):
         return foo.OperatorConfig(
             name="compute_aspect_ratio",
-            label="Data Quality Panel Aspect Ratio",
+            label="Old Data Quality Panel Aspect Ratio",
             dynamic=True,
         )
 
@@ -193,7 +193,7 @@ class ComputeExposure(foo.Operator):
     def config(self):
         return foo.OperatorConfig(
             name="compute_exposure",
-            label="Data Quality Panel Exposure",
+            label="Old Data Quality Panel Exposure",
             dynamic=True,
         )
 
@@ -220,7 +220,7 @@ class ComputeBlurriness(foo.Operator):
     def config(self):
         return foo.OperatorConfig(
             name="compute_blurriness",
-            label="Data Quality Panel Blur",
+            label="Old Data Quality Panel Blur",
             dynamic=True,
         )
 
@@ -247,7 +247,7 @@ class ComputeAllIssues(foo.Operator):
     def config(self):
         return foo.OperatorConfig(
             name="compute_all_issues",
-            label="Data Quality Panel All Issues",
+            label="Old Data Quality Panel All Issues",
             dynamic=True,
         )
 
@@ -268,7 +268,7 @@ class ComputeAllIssues(foo.Operator):
 
         # Ask if user wants to recompute all or just those w/o the field
         radio_group = types.RadioGroup(
-            label="Data Quality Issues",
+            label="Old Data Quality Issues",
             description="Select which issues to compute",
             caption="Issues already computed: " + ", ".join(present_issues),
         )

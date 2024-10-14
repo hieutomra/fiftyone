@@ -15,4 +15,4 @@ operators:
   - tag_samples
   - save_view
 panels:
-  - data_quality_panel
+  - old_data_quality_panel

@@ -1,4 +1,4 @@
-# Data Quality Panel
+# Old Data Quality Panel
 
 A panel for detecting and triaging problematic images in your dataset.
 
@@ -7,16 +7,16 @@ A panel for detecting and triaging problematic images in your dataset.
 Install latest:
 
 ```shell
-fiftyone plugins download https://github.com/voxel51/data_quality_panel
+fiftyone plugins download https://github.com/voxel51/old_data_quality_panel
 ```
 
 Or, development install:
 
 ```shell
-git clone https://github.com/voxel51/data_quality_panel
+git clone https://github.com/voxel51/old_data_quality_panel
 
-cd data_quality_panel
-ln -s "$(pwd)" "$(fiftyone config plugins_dir)/data_quality_panel"
+cd old_data_quality_panel
+ln -s "$(pwd)" "$(fiftyone config plugins_dir)/old_data_quality_panel"
 ```
 
 ## Usage
@@ -29,4 +29,5 @@ dataset = foz.load_zoo_dataset("quickstart")
 session = fo.launch_app(dataset)
 ```
 
-Then click the `+` next to the `Samples` tab and open the `Data Quality` panel.
+Then click the `+` next to the `Samples` tab and open the `Old Data Quality`
+panel.

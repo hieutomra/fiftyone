@@ -71,7 +71,7 @@ class ComputeHash(foo.Operator):
     def config(self):
         return foo.OperatorConfig(
             name="compute_hash",
-            label="Data Quality Hashing",
+            label="Old Data Quality Hashing",
             dynamic=True,
             # execute_as_generator=True
         )

@@ -117,7 +117,7 @@ class SaveView(foo.Operator):
     def config(self):
         return foo.OperatorConfig(
             name="save_view",
-            label="Data Quality Panel Save View",
+            label="Old Data Quality Panel Save View",
             dynamic=True,
             unlisted=True,
         )
@@ -160,7 +160,7 @@ class SaveView(foo.Operator):
         return types.Property(inputs)
 
     def execute(self, ctx):
-        ctx.ops.track_event("data_quality_panel_save_view")
+        ctx.ops.track_event("old_data_quality_panel_save_view")
         target_view = ctx.target_view()
 
         if ctx.params["save_default"] == "yes":
