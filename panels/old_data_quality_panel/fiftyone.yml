@@ -1,4 +1,4 @@
-name: "@voxel51/data_quality"
+name: "@voxel51/old_data_quality"
 description: Python panel for detecting and removing low-quality image samples
 version: 1.0.0
 fiftyone:
