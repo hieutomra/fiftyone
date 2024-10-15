@@ -3,6 +3,5 @@ description: Python panel for detecting and removing low-quality image samples
 version: 1.0.0
 fiftyone:
   version: "*"
-operators:
 panels:
   - data_quality_panel
