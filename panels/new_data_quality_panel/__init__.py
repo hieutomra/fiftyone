@@ -1,4 +1,3 @@
-import os
 import fiftyone.operators as foo
 import fiftyone.operators.types as types
 from fiftyone.operators import ExecutionContext
@@ -30,32 +29,21 @@ class DataQualityPanel(foo.Panel):
         """Set initial state"""
         ctx.panel.state.screen = "home"
         ctx.panel.state.issue_type = None
+        ctx.panel.state.computing = False
 
     ###
     # EVENT HANDLERS
     ###
 
-    def navigate_to_screen(
-        self, panel, current_screen, ctx: ExecutionContext, issue_type=None
-    ):
+    def navigate_to_screen(self, ctx: ExecutionContext):
         """Changes which screen to show"""
-        if issue_type:
-            ctx.panel.state.issue_type = issue_type
-        else:
-            ctx.panel.state.issue_type = None
+        ctx.panel.state.issue_type = ctx.params.get("issue_type", None)
+        ctx.panel.state.screen = ctx.params.get("next_screen", "home")
 
-        if current_screen == "home":
-            self.home_screen(panel, ctx)
-        elif current_screen == "pre_load_compute":
-            ctx.panel.state.screen = "pre_load_compute"
-            self.pre_load_compute_screen(panel, issue_type, ctx)
-        elif current_screen == "analysis":
-            ctx.panel.state.screen = "analysis"
-        else:
-            ctx.panel.state.screen = "home"
-
-    def on_compute_click(self, panel, issue_type, ctx: ExecutionContext):
-        self.pre_load_compute_screen(panel, issue_type, ctx, computing=True)
+    def on_compute_click(self, ctx: ExecutionContext):
+        issue_type = ctx.params.get("issue_type", None)
+        # panel = ctx.params
+        # self.pre_load_compute_screen(panel, issue_type, ctx, computing=True)
         self.scan_dataset(issue_type, ctx)
 
     ###
@@ -81,27 +69,18 @@ class DataQualityPanel(foo.Panel):
                 align_x="center",
                 align_y="center",
                 gap=5,
-                container=types.PaperContainer(),
             )
             sub_card_left = card.h_stack(
-                f"collapsed_sub_left_{issue_type}",
-                align_x="left",
-                gap=0,
-                container=types.PaperContainer(py=2, px=2, elevation=1),
+                f"collapsed_sub_left_{issue_type}", align_x="left", gap=0
             )
-
             sub_card_left.list(
                 f"collapsed_text_{issue_type}",
                 types.Object(),
                 view=types.MarkdownView(),
                 label=f"##### {issue_type.title()}",
             )
-
             sub_card_right = card.h_stack(
-                f"collapsed_sub_right_{issue_type}",
-                align_x="right",
-                gap=3,
-                container=types.PaperContainer(py=2, px=2, elevation=1),
+                f"collapsed_sub_right_{issue_type}", align_x="right", gap=3
             )
             badge_schema = {
                 "text": "Not Started"
@@ -109,14 +88,16 @@ class DataQualityPanel(foo.Panel):
             badge = types.PillBadgeView(**badge_schema)
             sub_card_right.obj(f"collapsed_badge_{issue_type}", view=badge)
 
-            icon_schema = {"icon": "ArrowForwardIcon"}
+            icon_schema = {"icon": "arrow_forward"}
             icon = types.IconButtonView(**icon_schema)
             sub_card_right.obj(
                 f"collapsed_icon_{issue_type}",
                 view=icon,
-                # on_click=self.navigate_to_screen( TODO: bug, on_click triggers immediately on render, why?
-                #     panel, "pre_load_compute", ctx, issue_type=issue_type
-                # ),
+                on_click=self.navigate_to_screen,
+                params={
+                    "issue_type": issue_type,
+                    "next_screen": "pre_load_compute",
+                },
             )
 
     def pre_load_compute_screen(
@@ -127,17 +108,15 @@ class DataQualityPanel(foo.Panel):
             align_x="left",
             align_y="center",
             gap=2,
-            container=types.PaperContainer(),
         )
-
-        icon_schema = {"icon": "ArrowForwardIcon"}
+        icon_schema = {"icon": "arrow_back"}
         icon = types.IconButtonView(**icon_schema)
         card_header.obj(
             f"back_button",
             view=icon,
-            on_click=self.navigate_to_screen(panel, "home_screen", ctx),
+            on_click=self.navigate_to_screen,
+            params={"next_screen": "home"},
         )
-
         text = "All data quality issue types"
         card_header.md(text, name="back_button_text")
 
@@ -145,33 +124,27 @@ class DataQualityPanel(foo.Panel):
             "pre_load_compute",
             align_y="center",
             align_x="center",
-            container=types.PaperContainer(),
         )
         sub_card_main = card_main.h_stack(
             "sub_card_main",
             align_x="center",
             align_y="center",
-            container=types.PaperContainer(),
         )
         sub_card_main_left = sub_card_main.h_stack(
             f"expanded_sub_left_{issue_type}",
             align_x="left",
             gap=0,
-            container=types.PaperContainer(py=2, px=2, elevation=1),
         )
-
         sub_card_main_left.list(
             f"collapsed_text_{issue_type}",
             types.Object(),
             view=types.MarkdownView(),
             label=f"##### {issue_type.title()}",
         )
-
         sub_card_main_right = sub_card_main.h_stack(
             f"expanded_sub_right_{issue_type}",
             align_x="right",
             gap=3,
-            container=types.PaperContainer(py=2, px=2, elevation=1),
         )
         badge_schema = {
             "text": "Not Started"
@@ -201,22 +174,34 @@ class DataQualityPanel(foo.Panel):
                 f"compute_button",
                 label=f"Scanning Dataset for {issue_type.title()}...",
                 variant="contained",
-                # disabled=True,
+                disabled=True,
             )
         else:
             card_main.btn(
                 f"compute_button",
                 label=f"Scan Dataset for {issue_type.title()}",
                 variant="contained",
-                on_click=self.on_compute_click(
-                    panel, issue_type, ctx
-                ),  # TODO: bug, on_click triggers immediately on render, why?
+                on_click=self.on_compute_click,
+                params={"issue_type": issue_type},
             )
 
     def render(self, ctx: ExecutionContext):
         panel = types.Object()
 
-        self.navigate_to_screen(panel, "home", ctx)
+        if ctx.panel.state.current_screen == "home":
+            self.home_screen(panel, ctx)
+        elif ctx.panel.state.current_screen == "pre_load_compute":
+            ctx.panel.state.screen = "pre_load_compute"
+            self.pre_load_compute_screen(
+                panel,
+                ctx.panel.state.issue_type,
+                ctx,
+                ctx.panel.state.computing,
+            )
+        elif ctx.panel.state.current_screen == "analysis":
+            ctx.panel.state.screen = "analysis"
+        else:
+            ctx.panel.state.screen = "home"
 
         return types.Property(
             panel,
