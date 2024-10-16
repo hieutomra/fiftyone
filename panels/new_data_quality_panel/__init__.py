@@ -57,7 +57,6 @@ class DataQualityPanel(foo.Panel):
     def on_compute_click(self, panel, issue_type, ctx: ExecutionContext):
         self.pre_load_compute_screen(panel, issue_type, ctx, computing=True)
         self.scan_dataset(issue_type, ctx)
-        print("here")
 
     ###
     # COMPUTATION
@@ -71,7 +70,7 @@ class DataQualityPanel(foo.Panel):
     ###
     def home_screen(self, panel, ctx: ExecutionContext):
 
-        subtitle = (
+        subtitle = (  # TODO change text color to muted
             "###### Find data quality issues in your dataset and act on them."
         )
         panel.md(subtitle, name="home_subtitle")
@@ -115,9 +114,9 @@ class DataQualityPanel(foo.Panel):
             sub_card_right.obj(
                 f"collapsed_icon_{issue_type}",
                 view=icon,
-                on_click=self.navigate_to_screen(
-                    panel, "pre_load_compute", ctx, issue_type=issue_type
-                ),
+                # on_click=self.navigate_to_screen( TODO: bug, on_click triggers immediately on render, why?
+                #     panel, "pre_load_compute", ctx, issue_type=issue_type
+                # ),
             )
 
     def pre_load_compute_screen(
@@ -181,8 +180,12 @@ class DataQualityPanel(foo.Panel):
         sub_card_main_right.obj(f"expanded_badge_{issue_type}", view=badge)
 
         if computing:
-            loader_schema = {}
-            loader = types.LoadingView()
+            loader_schema = {
+                "variant": "spinner",
+                "color": "base",
+                "size": "medium",
+            }
+            loader = types.LoadingView(**loader_schema)
             card_main.obj("loader", view=loader)
         else:
             card_main.md(  # TODO: figure out how to render an image from source
@@ -213,7 +216,7 @@ class DataQualityPanel(foo.Panel):
     def render(self, ctx: ExecutionContext):
         panel = types.Object()
 
-        self.navigate_to_screen(panel, "pre_load_compute", ctx, "brightness")
+        self.navigate_to_screen(panel, "home", ctx)
 
         return types.Property(
             panel,
