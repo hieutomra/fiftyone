@@ -30,7 +30,6 @@ class DataQualityPanel(foo.Panel):
         """Set initial state"""
         ctx.panel.state.screen = "home"
         ctx.panel.state.issue_type = None
-        ctx.panel.state.computing = False
 
     ###
     # EVENT HANDLERS
@@ -55,10 +54,9 @@ class DataQualityPanel(foo.Panel):
         else:
             ctx.panel.state.screen = "home"
 
-    def on_compute_click(self, issue_type, ctx: ExecutionContext):
-        ctx.panel.state.computing = True
+    def on_compute_click(self, panel, issue_type, ctx: ExecutionContext):
+        self.pre_load_compute_screen(panel, issue_type, ctx, computing=True)
         self.scan_dataset(issue_type, ctx)
-        ctx.panel.state.computing = False
 
     ###
     # COMPUTATION
@@ -122,7 +120,7 @@ class DataQualityPanel(foo.Panel):
             )
 
     def pre_load_compute_screen(
-        self, panel, issue_type, ctx: ExecutionContext
+        self, panel, issue_type, ctx: ExecutionContext, computing=False
     ):
         card_header = panel.h_stack(
             "navbar",
@@ -183,7 +181,6 @@ class DataQualityPanel(foo.Panel):
 
         current_dir = os.path.dirname(os.path.abspath(__file__))
         image_path = os.path.join(current_dir, "assets/pixelated-heart.svg")
-        print(image_path)
         card_main.md(
             f'![Pixelated Heart]({"assets/pixelated-heart.svg"} "Pixelated Heart")',
             name="pixelated_heart",
@@ -192,7 +189,7 @@ class DataQualityPanel(foo.Panel):
         text = "Find, curate, and act on blurry images within your dataset easily with FiftyOne."
         card_main.md(text, name="back_button_text")
 
-        if ctx.panel.state.computing:
+        if computing:
             card_main.btn(
                 f"compute_button",
                 label="Scanning Dataset for {issue_type.title()}...",
@@ -204,6 +201,7 @@ class DataQualityPanel(foo.Panel):
                 f"compute_button",
                 label=f"Scan Dataset for {issue_type.title()}",
                 variant="contained",
+                on_click=self.on_compute_click(panel, issue_type, ctx),
             )
 
     def render(self, ctx: ExecutionContext):
