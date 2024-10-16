@@ -52,6 +52,7 @@ const PillBadge = ({
 
   const chipStyle: { [key: string]: string | number } = {
     color: COLORS[chipColor || "default"] || COLORS.default,
+    fontSize: 14,
     fontWeight: 500,
     paddingLeft: 1,
   };
@@ -86,7 +87,9 @@ const PillBadge = ({
               ) : undefined
             }
             label={
-              Array.isArray(text) && text.length > 0 && Array.isArray(text[0]) ? (
+              Array.isArray(text) &&
+              text.length > 0 &&
+              Array.isArray(text[0]) ? (
                 <Select
                   value={chipSelection}
                   variant={"standard"}
