@@ -57,6 +57,7 @@ class DataQualityPanel(foo.Panel):
     def on_compute_click(self, panel, issue_type, ctx: ExecutionContext):
         self.pre_load_compute_screen(panel, issue_type, ctx, computing=True)
         self.scan_dataset(issue_type, ctx)
+        print("here")
 
     ###
     # COMPUTATION
@@ -179,12 +180,15 @@ class DataQualityPanel(foo.Panel):
         badge = types.PillBadgeView(**badge_schema)
         sub_card_main_right.obj(f"expanded_badge_{issue_type}", view=badge)
 
-        current_dir = os.path.dirname(os.path.abspath(__file__))
-        image_path = os.path.join(current_dir, "assets/pixelated-heart.svg")
-        card_main.md(
-            f'![Pixelated Heart]({"assets/pixelated-heart.svg"} "Pixelated Heart")',
-            name="pixelated_heart",
-        )
+        if computing:
+            loader_schema = {}
+            loader = types.LoadingView()
+            card_main.obj("loader", view=loader)
+        else:
+            card_main.md(  # TODO: figure out how to render an image from source
+                f'![Pixelated Heart]({"assets/pixelated-heart.svg"} "Pixelated Heart")',
+                name="pixelated_heart",
+            )
 
         text = "Find, curate, and act on blurry images within your dataset easily with FiftyOne."
         card_main.md(text, name="back_button_text")
@@ -192,16 +196,18 @@ class DataQualityPanel(foo.Panel):
         if computing:
             card_main.btn(
                 f"compute_button",
-                label="Scanning Dataset for {issue_type.title()}...",
+                label=f"Scanning Dataset for {issue_type.title()}...",
                 variant="contained",
-                disabled=True,
+                # disabled=True,
             )
         else:
             card_main.btn(
                 f"compute_button",
                 label=f"Scan Dataset for {issue_type.title()}",
                 variant="contained",
-                on_click=self.on_compute_click(panel, issue_type, ctx),
+                on_click=self.on_compute_click(
+                    panel, issue_type, ctx
+                ),  # TODO: bug, on_click triggers immediately on render, why?
             )
 
     def render(self, ctx: ExecutionContext):
