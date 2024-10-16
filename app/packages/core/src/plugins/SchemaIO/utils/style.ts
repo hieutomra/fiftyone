@@ -15,8 +15,8 @@ export function getDisabledColors(code: ColorType) {
         "var(--fo-palette-primary-main)",
         "var(--fo-palette-text-primary)",
       ];
-    return [code, "var(--fo-palette-text-primary)"];
   }
+  return [code, "var(--fo-palette-text-primary)"];
 }
 
 export function getFieldSx(options: FieldsetOptionsType) {
