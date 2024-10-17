@@ -58,7 +58,7 @@ class DataQualityPanel(foo.Panel):
             "split_panel",
             {"name": "data_quality_panel", "layout": "horizontal"},
         )
-        ctx.panel.state.screen = "pre_load_compute"
+        ctx.panel.state.screen = "home"
         ctx.panel.state.issue_type = "brightness"
         ctx.panel.state.computing = False
         ctx.panel.state.issue_config = self.DEFAULT_ISSUE_CONFIG
