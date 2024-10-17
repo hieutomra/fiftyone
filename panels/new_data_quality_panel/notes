@@ -3,9 +3,7 @@
 
 TODOS
 
-1. Bug - functions execute immediately once panel is rendered (i.e., accidentally triggering on_click for buttons)
-2. Question - how do I render an image from a source file path?
-3. Question - how do I change the color of text strings? Needs to match Figma designs
-4. Question - how do I adjust the spacing for each individual PaperContainer / h/v stack?
-5. Bug - centering within a v-stack doesn't seem to be working properly?
-6. Question - how do I render the appropriate icon from MUI?
+1. Question - how do I render an image from a source file path?
+2. Question - how do I change the color of text strings? Needs to match Figma designs
+3. Question - how do I adjust the spacing for each individual PaperContainer / h/v stack?
+4. Bug - centering within a v-stack doesn't seem to be working properly?
